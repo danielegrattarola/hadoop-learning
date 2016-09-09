@@ -1,12 +1,10 @@
-import os
-import time
+import os, time
 
 
 class Logger:
-	def __init__(self, debug=False):
+	def __init__(self, debug = False):
 		self.debug = debug
-		if self.debug:
-			return  # Do not create folders if in debug mode
+		if self.debug: return
 
 		output_folder = './output/'
 		run_folder = 'run%Y%m%d-%H%M%S/'
@@ -16,8 +14,11 @@ class Logger:
 		if not os.path.exists(self.path):
 			os.makedirs(self.path)
 
+		self.save_file = self.path + 'model.h5'
+
 	def log(self, data):
 		if self.debug:
+			print data
 			return
 		try:
 			logfile = open(self.path + 'log.txt', 'a')
@@ -26,10 +27,10 @@ class Logger:
 			return
 		if type(data) is dict:
 			for k in data:
-				logfile.write(str(k) + ': ' + str(data[k]) + '\n')
-				print str(k) + ': ' + str(data[k])
+				logfile.write(k + ': ' + str(data[k]) + '\n')
+				print k + ': ' + str(data[k])
 		if type(data) is tuple:
-			logfile.write(str(data[0]) + ': ' + str(data[1]) + '\n')
+			logfile.write(data[0] + ': ' + str(data[1]) + '\n')
 		if type(data) is str:
 			logfile.write(data + '\n')
 			print data
@@ -38,12 +39,17 @@ class Logger:
 		if self.debug:
 			return
 		try:
-			f = open(self.path + filename, 'a')
+			file = open(self.path + filename, 'a')
 		except IOError:
 			print 'Logger:to_csv IO error while opening file'
 			return
-		string = ','.join([str(val) for val in row])
+		if type(row) is list:
+			string = ','.join([str(val) for val in row])
+		elif type(row) is str:
+			string = row
+		else:
+			string = str(row) # Try to convert it anyway
 		string = string + '\n' if not string.endswith('\n') else ''
-		f.write(string)
-		f.close()
+		file.write(string)
+		file.close()
 

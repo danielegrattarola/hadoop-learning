@@ -6,23 +6,26 @@ import numpy as np
 
 class DeepNetwork:
 	
-	def __init__(self, output_layer, input_shape, learning_rate=0.1, dropout_prob=0.1, load_path=None, logger=None):
+	def __init__(self, input_shape, output_layer, batch_size=32, learning_rate=0.1, dropout_prob=0.1, load_path=None, logger=None):
 		self.model = Sequential()
 		self.output_layer = output_layer  # Size of the network output
+		self.batch_size = batch_size
 		self.learning_rate = learning_rate
 		self.dropout_prob = dropout_prob
 
-		# Define neural network
-		self.model.add(BatchNormalization(axis=1, input_shape=input_shape))
-		self.model.add(Convolution2D(32, 2, 2, border_mode='valid', subsample=(2, 2)))
+		# Neural network
+
+		self.model.add(Dense(1024, input_shape=input_shape))
 		self.model.add(Activation('relu'))
-
-		self.model.add(Flatten())
-
-		self.model.add(BatchNormalization(mode=1))
 		self.model.add(Dropout(self.dropout_prob))
+
 		self.model.add(Dense(1024))
 		self.model.add(Activation('relu'))
+		self.model.add(Dropout(self.dropout_prob))
+
+		self.model.add(Dense(1024))
+		self.model.add(Activation('relu'))
+		self.model.add(Dropout(self.dropout_prob))
 
 		self.model.add(Dense(self.output_layer))
 		self.model.add(Activation('relu'))
@@ -36,17 +39,32 @@ class DeepNetwork:
 
 		self.model.compile(loss='mean_squared_error', optimizer=self.optimizer, metrics=['accuracy'])
 
-	def train(self, x, t):
+	def train(self, x, t, nb_epoch=1, validation_data=None):
 		x = np.asarray(x)
 		t = np.asarray(t)
-		return self.model.train_on_batch(x, t)
+		return self.model.fit(x, t, batch_size=self.batch_size, nb_epoch=nb_epoch, validation_data=validation_data)
 
 	def predict(self, x):
 		# Feed input to the model, return predictions
 		x = np.asarray(x)
-		return self.model.predict_on_batch(x)
+		return self.model.predict(x)
 
 	def test(self, x, t):
+		x = np.asarray(x)
+		t = np.asarray(t)
+		return self.model.evaluate(x, t, batch_size=self.batch_size)
+
+	def train_on_batch(self, x, t):
+		x = np.asarray(x)
+		t = np.asarray(t)
+		return self.model.train_on_batch(x, t)
+
+	def predict_on_batch(self, x):
+		# Feed input to the model, return predictions
+		x = np.asarray(x)
+		return self.model.predict_on_batch(x)
+
+	def test_on_batch(self, x, t):
 		x = np.asarray(x)
 		t = np.asarray(t)
 		return self.model.test_on_batch(x, t)
