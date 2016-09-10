@@ -1,8 +1,10 @@
 output/
+data/
 .idea/
 *png
 *pyc
 *.h5
 *.txt
 *.zip
-*.pdf
+*.pd
+*.csv

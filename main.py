@@ -6,14 +6,14 @@ from Logger import Logger
 from DeepNetwork import DeepNetwork
 
 
-# I/O
+# I/O setup
 parser = argparse.ArgumentParser()
 parser.add_argument('-D', '--dataset', type=str, required=False, default='R1', help='specify on which dataset to train and test; possible datasets are R1, R2, R3, R4, R5, Q2, Q3, Q4 (default: R1)')
-parser.add_argument('-l', '--load', type=str, required=False, default='', help='load the neural network from the given file path.')
-parser.add_argument('-d', '--debug', action='store_true', help='do not print anything to file and do not create the output folder.')
-parser.add_argument('--epochs', type=int, default=5, help='how many epochs of training should the model do on each LOO fold (default: 5).')
-parser.add_argument('--learning_rate', type=float, required=False, default=None, help='custom learning rate for the neural network.')
-parser.add_argument('--dropout', type=float, required=False, default=0.1, help='custom dropout rate for the neural network (default: 0.1).')
+parser.add_argument('-l', '--load', type=str, required=False, default='', help='load the neural network from the given file path')
+parser.add_argument('-d', '--debug', action='store_true', help='do not print anything to file and do not create the output folder')
+parser.add_argument('--epochs', type=int, default=5, help='how many epochs of training should the model do on each LOO fold (default: 5)')
+parser.add_argument('--learning_rate', type=float, required=False, default=None, help='custom learning rate for the neural network')
+parser.add_argument('--dropout', type=float, required=False, default=0.1, help='custom dropout rate for the neural network (default: 0.1)')
 args = parser.parse_args()
 if args.debug:
 	print 'WARNING: debug mode is enabled, output will not be saved.'
