@@ -71,7 +71,7 @@ for train_idx, test_idx in loo_indexes:
 	# Cross validation on the left out sample
 	logger.log("Testing in cross validation...")
 	prediction = DN.predict(x_test)
-	logger.to_csv(prediction_file, list(prediction[0] + dataset.drop(TARGET_FEATURE_NAME, axis=1).as_matrix()[test_idx][0]))
+	logger.to_csv(prediction_file, list(prediction[0]) + list(scaled_dataset.as_matrix()[test_idx][0]))
 	metrics = DN.test(x_test, y_test)
 	logger.log("Test loss: %s" % metrics[0])
 	logger.to_csv(metrics_file, metrics)
