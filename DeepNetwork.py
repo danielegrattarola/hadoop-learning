@@ -2,11 +2,12 @@ from keras.models import Sequential
 from keras.layers import *
 from keras.optimizers import *
 import numpy as np
-
+import keras.backend.tensorflow_backend as b
 
 class DeepNetwork:
 	
 	def __init__(self, input_shape, output_layer, batch_size=32, learning_rate=0.1, dropout_prob=0.1, load_path=None, logger=None):
+		b.clear_session() # This is necessary because TF memory management was done by drunk people
 		self.model = Sequential()
 		self.output_layer = output_layer  # Size of the network output
 		self.batch_size = batch_size
