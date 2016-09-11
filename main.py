@@ -2,6 +2,7 @@ import argparse
 import pandas as pd
 import sklearn.preprocessing as sp
 from sklearn import cross_validation
+from sklearn import decomposition
 from Logger import Logger
 from DeepNetwork import DeepNetwork
 
@@ -11,6 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-D', '--dataset', type=str, required=False, default='R1', help='specify on which dataset to train and test; possible datasets are R1, R2, R3, R4, R5, Q2, Q3, Q4 (default: R1)')
 parser.add_argument('-l', '--load', type=str, required=False, default='', help='load the neural network from the given file path')
 parser.add_argument('-d', '--debug', action='store_true', help='do not print anything to file and do not create the output folder')
+parser.add_argument('--pca', type=float, default=None, const=0.9, nargs='?', help='perform Principal Components Analysis on the data and keep only the features which explain the given amount of variance (default 0.90')
 parser.add_argument('--epochs', type=int, default=5, help='how many epochs of training should the model do on each LOO fold (default: 5)')
 parser.add_argument('--learning_rate', type=float, required=False, default=None, help='custom learning rate for the neural network')
 parser.add_argument('--dropout', type=float, required=False, default=0.1, help='custom dropout rate for the neural network (default: 0.1)')
@@ -30,6 +32,23 @@ scaled_dataset = pd.DataFrame(sp.scale(dataset, with_mean=False), columns=datase
 
 X = scaled_dataset.drop(TARGET_FEATURE_NAME, axis=1).as_matrix() # Remove targets from dataset
 Y = scaled_dataset[TARGET_FEATURE_NAME].as_matrix()
+
+# Optionally apply PCA
+if args.pca is not None:
+	pca = decomposition.PCA()
+	pca.fit(X) # Fit once to calculate the number of components needed
+	logger.log('Explained variance: %s' % pca.explained_variance_ratio_)
+	# Keep only components that are needed to cover enough variance
+	variance_ratio = 0
+	n = 0
+	for v in pca.explained_variance_ratio_:
+		variance_ratio += v
+		n+=1
+		if variance_ratio >= args.pca:
+			break
+	logger.log('Kept %d components for a total of %.2f%% ' % n)
+	pca.n_components = n
+	X = pca.fit_transform(X) # Fit again, keep less components and transform the data
 
 # Network
 input_shape = X.shape[1:]
@@ -52,7 +71,7 @@ for train_idx, test_idx in loo_indexes:
 	# Cross validation on the left out sample
 	logger.log("Testing in cross validation...")
 	prediction = DN.predict(x_test)
-	logger.to_csv(prediction_file, list(prediction[0] + y_test + x_test[0]))
+	logger.to_csv(prediction_file, list(prediction[0] + dataset.drop(TARGET_FEATURE_NAME, axis=1).as_matrix()[test_idx][0]))
 	metrics = DN.test(x_test, y_test)
 	logger.log("Test loss: %s" % metrics[0])
 	logger.to_csv(metrics_file, metrics)
