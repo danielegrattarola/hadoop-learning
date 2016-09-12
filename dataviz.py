@@ -8,6 +8,8 @@ from sklearn import preprocessing as sp
 from pandas.tools.plotting import scatter_matrix
 from mpl_toolkits.mplot3d import Axes3D # Beware of import optimization if you are using an IDE: keep this module even if it seems to be unused
 
+
+DPI = 250
 # Functions
 def correlation(dataset, dataset_name):
 	# Plot correlation matrix
@@ -33,11 +35,10 @@ def correlation(dataset, dataset_name):
 	for label in ax.get_xticklabels():
 		label.set_rotation(45) # This is needed because labels may overlap if there are too many features in the dataset
 	ax.set_yticklabels(names)
-	fig.suptitle('Correlation matrix %s' % dataset_name)
 	plt.show()
 
 	# Save image to disk
-	fig.savefig('./data/viz/correlation_%s.png' % dataset_name, dpi=500, bbox_inches='tight')
+	fig.savefig('./data/viz/correlation_%s.png' % dataset_name, dpi=DPI, bbox_inches='tight')
 
 def PCA(dataset, dataset_name, three_d=False):
 	# Plot the target variable against the first one or two PC
@@ -68,11 +69,10 @@ def PCA(dataset, dataset_name, three_d=False):
 		ax.set_xlabel('PC1')
 		ax.set_ylabel(targets.name)
 
-	fig.suptitle('PCA analysis %s' % dataset_name)
 	plt.show()
 
 	# Save image to disk
-	fig.savefig('./data/viz/pca_%dD_%s.png' % (3 if three_d else 2, dataset_name), dpi=500, bbox_inches='tight')
+	fig.savefig('./data/viz/pca_%dD_%s.png' % (3 if three_d else 2, dataset_name), dpi=DPI, bbox_inches='tight')
 
 def scatter(dataset, dataset_name):
 	# Compute the scatter matrix with Pandas
@@ -83,7 +83,6 @@ def scatter(dataset, dataset_name):
 	# Draw the plot
 	mng = plt.get_current_fig_manager()
 	mng.resize(*mng.window.maxsize())
-	plt.suptitle('Scatter matrix %s' % dataset_name)
 	plt.show()
 
 

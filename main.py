@@ -6,7 +6,6 @@ from sklearn import cross_validation
 from sklearn import decomposition
 from Logger import Logger
 from DeepNetwork import DeepNetwork
-import keras
 
 
 # I/O setup
@@ -15,7 +14,7 @@ parser.add_argument('-D', '--dataset', type=str, required=False, default='R1', h
 parser.add_argument('-l', '--load', type=str, required=False, default='', help='load the neural network from the given file path')
 parser.add_argument('-d', '--debug', action='store_true', help='do not print anything to file and do not create the output folder')
 parser.add_argument('--pca', type=float, default=None, const=0.9, nargs='?', help='perform Principal Components Analysis on the data and keep only the features which explain the given amount of variance (default 0.90')
-parser.add_argument('--epochs', type=int, default=1, help='how many epochs of training should the model do on each LOO fold (default: 5)')
+parser.add_argument('--epochs', type=int, default=5, help='how many epochs of training should the model do on each LOO fold (default: 5)')
 parser.add_argument('--learning_rate', type=float, required=False, default=None, help='custom learning rate for the neural network')
 parser.add_argument('--dropout', type=float, required=False, default=0.1, help='custom dropout rate for the neural network (default: 0.1)')
 args = parser.parse_args()
@@ -48,7 +47,7 @@ if args.pca is not None:
 		n+=1
 		if variance_ratio >= args.pca:
 			break
-	logger.log('Kept %d components for a total of %.2f%% ' % n)
+	logger.log('Kept %d components for a total of %.2f%% ' % (n, variance_ratio))
 	pca.n_components = n
 	X = pca.fit_transform(X) # Fit again, keep less components and transform the data
 
@@ -61,7 +60,7 @@ logger.to_csv(prediction_file, ['prediction'] + list(dataset.keys())) # Add head
 
 
 # Main loop
-loo_indexes = cross_validation.LeaveOneOut(len(dataset)) # Generate a lists of indexed to split the data
+loo_indexes = cross_validation.LeaveOneOut(len(dataset)) # Generates a list of indexes to split the data
 for train_idx, test_idx in loo_indexes:
 	logger.log("Fold %d of %d" % (test_idx + 1, len(loo_indexes)))
 	x_train, x_test = X[train_idx], X[test_idx] # Split the train and test samples

@@ -15,7 +15,6 @@ class DeepNetwork:
 		self.dropout_prob = dropout_prob
 
 		# Neural network
-
 		self.model.add(Dense(1024, input_shape=input_shape))
 		self.model.add(Activation('relu'))
 		self.model.add(Dropout(self.dropout_prob))
@@ -29,7 +28,6 @@ class DeepNetwork:
 		self.model.add(Dropout(self.dropout_prob))
 
 		self.model.add(Dense(self.output_layer))
-		self.model.add(Activation('relu'))
 
 		self.optimizer = Adam()
 		self.logger = logger
