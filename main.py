@@ -21,6 +21,13 @@ args = parser.parse_args()
 if args.debug:
 	print 'WARNING: debug mode is enabled, output will not be saved.'
 logger = Logger(debug=args.debug)
+logger.log('PCA: %s' % args.pca)
+logger.log('Epochs: %d' % args.epochs)
+logger.log('Learning rate: %s' % (args.learning_rate if args.learning_rate is not None else 'default'))
+logger.log('Dropout probability: %f' % args.dropout)
+logger.log('Dataset: %s' % args.dataset)
+logger.log('Starting training...\n')
+
 metrics_file = 'cross_validation_metrics_%s.csv' % args.dataset
 prediction_file = 'cross_validation_prediction_%s.csv' % args.dataset
 
