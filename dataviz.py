@@ -10,6 +10,7 @@ from mpl_toolkits.mplot3d import Axes3D # Beware of import optimization if you a
 
 
 DPI = 250
+TARGET_FEATURE = 'complTime'
 # Functions
 def correlation(dataset, dataset_name):
 	# Plot correlation matrix
@@ -43,8 +44,8 @@ def correlation(dataset, dataset_name):
 def PCA(dataset, dataset_name, three_d=False):
 	# Plot the target variable against the first one or two PC
 	print 'PCA %dD - Dataset %s' % (3 if three_d else 2, dataset_name)
-	targets = dataset['complTime']
-	features = dataset.drop('complTime', axis=1)
+	targets = dataset[TARGET_FEATURE]
+	features = dataset.drop(TARGET_FEATURE, axis=1)
 
 	# Compute PCA
 	pca = decomposition.PCA()
@@ -85,6 +86,30 @@ def scatter(dataset, dataset_name):
 	mng.resize(*mng.window.maxsize())
 	plt.show()
 
+def custom(dataset, dataset_name, feature_name):
+	print '%s vs. %s - Dataset %s' % (TARGET_FEATURE, feature_name, dataset_name)
+
+	y = dataset[TARGET_FEATURE]
+	x = dataset[feature_name]
+
+	# Draw the plot
+	fig = plt.figure()
+	# Maximize window (not cross-platform)
+	mng = plt.get_current_fig_manager()
+	mng.resize(*mng.window.maxsize())
+
+	ax = fig.add_subplot(111)
+	ax.scatter(x, y)
+	ax.set_xlabel(feature_name)
+	ax.set_ylabel(TARGET_FEATURE)
+
+	plt.show()
+
+	# Save image to disk
+	fig.savefig('./data/viz/custom_%s_v_%s_%s.png' % (TARGET_FEATURE, feature_name, dataset_name), dpi=DPI, bbox_inches='tight')
+
+
+
 
 # I/O setup
 parser = argparse.ArgumentParser()
@@ -93,6 +118,8 @@ parser.add_argument('--correlation', action='store_true', help='plot correlation
 parser.add_argument('--pca', action='store_true', help='plot target values against first PC of features')
 parser.add_argument('--pca3d', action='store_true', help='plot target values against first two PCs of features')
 parser.add_argument('--scatter', action='store_true', help='plot scatter matrices for the datasets (WARNING: this option does not save the images automatically like the others, so you have to do it by hand)')
+parser.add_argument('--custom', type=str, default=None, help='plot the target feature against the feature with the given name')
+parser.add_argument('--noscale', action='store_true', help='do not normalize data before plotting')
 args = parser.parse_args()
 
 # Main
@@ -104,6 +131,9 @@ for data_name in ['R1', 'R2', 'R3', 'R4', 'R5', 'Q2', 'Q3', 'Q4'] if args.datase
 	# Read data
 	data = pandas.read_csv('./data/%s.csv' % data_name) # Read dataset from CSV
 	scaled_data = pandas.DataFrame(sp.scale(data, with_mean=False), columns=data.keys()) # Normalize data
+	if args.noscale:
+		scaled_data = data
+		data_name += '_noscale'
 
 	if args.correlation:
 		correlation(scaled_data, data_name)
@@ -113,3 +143,5 @@ for data_name in ['R1', 'R2', 'R3', 'R4', 'R5', 'Q2', 'Q3', 'Q4'] if args.datase
 		PCA(scaled_data, data_name, three_d=True)
 	if args.scatter:
 		scatter(scaled_data, data_name)
+	if args.custom is not None:
+		custom(scaled_data, data_name, args.custom)

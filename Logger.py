@@ -2,15 +2,18 @@ import os, time
 
 
 class Logger:
-	def __init__(self, debug = False):
+	def __init__(self, debug = False, append=None):
 		self.debug = debug
 		if self.debug: return
 
 		output_folder = './output/'
-		run_folder = 'run%Y%m%d-%H%M%S/'
+		run_folder = 'run%Y%m%d-%H%M%S'
 		if not os.path.exists(output_folder):
 			os.makedirs(output_folder)
 		self.path = ''.join([output_folder, time.strftime(run_folder)])
+		if append is not None:
+			self.path += '_' + str(append)
+		self.path += '/'
 		if not os.path.exists(self.path):
 			os.makedirs(self.path)
 

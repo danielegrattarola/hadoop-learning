@@ -1,5 +1,4 @@
 import argparse
-import gc
 import pandas as pd
 import sklearn.preprocessing as sp
 from sklearn import cross_validation
@@ -15,7 +14,6 @@ parser.add_argument('-l', '--load', type=str, required=False, default='', help='
 parser.add_argument('-d', '--debug', action='store_true', help='do not print anything to file and do not create the output folder')
 parser.add_argument('--pca', type=float, default=None, const=0.9, nargs='?', help='perform Principal Components Analysis on the data and keep only the features which explain the given amount of variance (default 0.90')
 parser.add_argument('--epochs', type=int, default=5, help='how many epochs of training should the model do on each LOO fold (default: 5)')
-parser.add_argument('--learning_rate', type=float, required=False, default=None, help='custom learning rate for the neural network')
 parser.add_argument('--dropout', type=float, required=False, default=0.1, help='custom dropout rate for the neural network (default: 0.1)')
 args = parser.parse_args()
 if args.debug:
