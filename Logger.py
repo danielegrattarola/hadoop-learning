@@ -2,12 +2,12 @@ import os, time
 
 
 class Logger:
-	def __init__(self, debug = False, append=None):
+	def __init__(self, debug = False, append=None, custom_run_name=None):
 		self.debug = debug
 		if self.debug: return
 
 		output_folder = './output/'
-		run_folder = 'run%Y%m%d-%H%M%S'
+		run_folder = 'run%Y%m%d-%H%M%S' if custom_run_name is None else custom_run_name
 		if not os.path.exists(output_folder):
 			os.makedirs(output_folder)
 		self.path = ''.join([output_folder, time.strftime(run_folder)])
@@ -36,7 +36,9 @@ class Logger:
 			logfile.write(data[0] + ': ' + str(data[1]) + '\n')
 		if type(data) is str:
 			logfile.write(data + '\n')
-			print data
+		if type(data) is list:
+			logfile.write(','.join(str(elem) for elem in data) + '\n')
+		print data
 
 	def to_csv(self, filename, row):
 		if self.debug:
