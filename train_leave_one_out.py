@@ -10,6 +10,7 @@ from DeepNetwork import DeepNetwork
 # I/O setup
 parser = argparse.ArgumentParser()
 parser.add_argument('-D', '--dataset', type=str, required=False, default='R1', help='specify on which dataset to train and test; possible datasets are R1, R2, R3, R4, R5, Q2, Q3, Q4 (default: R1)')
+parser.add_argument('-s', '--save', action='store_true', help='save the neural network model and weights to file after training')
 parser.add_argument('-l', '--load', type=str, required=False, default='', help='load the neural network from the given file path')
 parser.add_argument('-d', '--debug', action='store_true', help='do not print anything to file and do not create the output folder')
 parser.add_argument('--pca', type=float, default=None, const=0.9, nargs='?', help='perform Principal Components Analysis on the data and keep only the features which explain the given amount of variance (default 0.90)')
@@ -86,5 +87,8 @@ for train_idx, test_idx in loo_indexes:
 	logger.log('Done fold, resetting network...\n')
 	DN = DeepNetwork(input_shape, output, logger=logger)
 
+if args.save:
+		logger.log('Saving model...')
+		DN.save()
 logger.log('Done. Exiting..')
 

@@ -46,7 +46,7 @@ class Logger:
 		try:
 			file = open(self.path + filename, 'a')
 		except IOError:
-			print 'Logger:to_csv IO error while opening file'
+			print 'Logger:to_csv IO error while opening file %s' % self.path + filename
 			return
 		if type(row) is list:
 			string = ','.join([str(val) for val in row])
