@@ -92,7 +92,7 @@ By running any of the three scripts, a custom `runYYYMMDD-hhmmss` folder (the na
 - **raw_val_metrics_DD.csv** contains the validation loss and accuracy values for the prediction on the validation set;
 - **val_interest_data_DD.csv** contains rows where the model's prediction, the real target value, the nCores feature and the dataSize feature are represented both in the original scale of the data (prefixed by _os_) and the scale used for training the model;
 - **val_computed_error_metrics_DD.csv** contains RMSE, mean absolute error and mean average error for the validation predictions, computed both in the original scale of the data (prefixed by _os_) and the scale used for training the model;
-- **complTime_v_prediction_R1.png** is a plot of the model predictions vs. the real values of the validation set;
+- **complTime_v_prediction_DD.png** is a plot of the model predictions vs. the real values of the validation set;
 - **log.txt** will contain all the information output by the script during execution; 
 
 #### predict
