@@ -87,7 +87,7 @@ By running any of the three scripts, a custom `runYYYMMDD-hhmmss` folder (the na
 - **cross_validation_metrics_DD.csv** contains the validation loss and accuracy values;
 - **log.txt** contains all the information output by the script during execution;  
   
-#### train_custon
+#### train_custom
 - **raw_val_predictions_dd.csv** contains rows where the first column is the prediction of the model on the corresponding datapoint (i.e. the rest of the row), computed for all validation set;
 - **raw_val_metrics_DD.csv** contains the validation loss and accuracy values for the prediction on the validation set;
 - **val_interest_data_DD.csv** contains rows where the model's prediction, the real target value, the nCores feature and the dataSize feature are represented both in the original scale of the data (prefixed by _os_) and the scale used for training the model;
