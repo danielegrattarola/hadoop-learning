@@ -74,13 +74,13 @@ python predict.py --dataset /path/to/test_data.csv --load output/runYYYMMDD-hhmm
 To evaluate the generalization or interpolation capabilities of the model, instead, we could do something like the following:   
 ```sh
 # Train on dataset R2 and use all datapoints associated to 20 nCores as validation data
-python train_custom.py --drop nCores 20
+python train_custom.py --drop nCores 20 --dataset R2
 ```  
 
 
 ### Output
 
-By running any of the three scripts, a custom `runYYYMMDD-hhmmss` folder will be created in the `output` folder. The folder will contain different CSV files with the data suggested by their filename and some plots of the data.  
+By running any of the three scripts, a custom `runYYYMMDD-hhmmss` folder (the name might have more info appended to it, like the feature being dropped or the number of training epochs: this is done to facilitate the workflow during experiments) will be created in the `output` folder. The folder will contain different CSV files with the data suggested by their filename and some plots of the data.  
 
 #### train_leave_one_out
 - **cross_validation_prediction_DD.csv** contains rows where the first column is the prediction of the model on the corresponding datapoint (i.e. the rest of the row);
@@ -97,7 +97,7 @@ By running any of the three scripts, a custom `runYYYMMDD-hhmmss` folder will be
 
 #### predict
 - **predictions.csv** contains the model's predictions on the dataset being tested, as well as the scaled datapoint associated to each prediction;
-- **metrics.csv** contains the test loss and accuracy (only if the -t flag was set, i.e. the tested dataset contains the real target values)
+- **metrics.csv** contains the test loss and accuracy (only if the -t flag was set, i.e. the tested dataset contains the real target values);
 - **log.txt** contains all the information output by the script during execution;  
 
 
