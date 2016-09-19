@@ -1,6 +1,6 @@
 # Hadoop Learning
 
-This is the project for the Coumputing Infrastructure course of Politecnico di Milano, academic year 2015/2016. The scripts in the repository implement a deep neural network to approximate the completion time of Hive queries run on distributed Hadoop systems.  
+This is the project for the Coumputing Infrastructure course of Politecnico di Milano, academic year 2015/2016. The scripts in the repository implement a deep neural network to approximate the relationship between the performance on map and reduce tasks and the completion time of Hive queries run on distributed Hadoop systems.  
   
 The Apache Hadoop framework is an open-source software framework for distributed storage and distributed processing of very large data sets on computer clusters built from commodity hardware.  
 Apache Hive is a data warehouse infrastructure built on top of Hadoop for providing data summarization, query, and analysis. Hive gives an SQL-like interface to query data stored in various databases and file systems that integrate with Hadoop.  
@@ -9,9 +9,9 @@ Due to the possibly great complexity of the distributed systems on which Hive qu
 You can find a detailed recount of my experiments with these scripts and dataset [here](http://exsubstantia.com/ai/Estimating%20performance%20of%20Hadoop%20systems%20with%20deep%20learning.pdf.zip).
 
 ## Dependencies
-The dependencies for the scripts include: [kears](http://keras.io/#installation), [scikit-learn](http://scikit-learn.org/stable/install.html), [pandas](http://pandas.pydata.org/), [h5py](http://packages.ubuntu.com/trusty/python-h5py), Numpy and Matplotlib (these last two are also dependecies of Keras).   
+The dependencies for the scripts include: [Keras](http://keras.io/#installation), [scikit-learn](http://scikit-learn.org/stable/install.html), [Pandas](http://pandas.pydata.org/), [h5py](http://packages.ubuntu.com/trusty/python-h5py), [Numpy](https://www.scipy.org/scipylib/download.html) and [Matplotlib](http://matplotlib.org/users/installing.html) (these last two are also dependecies of Keras).   
 
-**WARNING**: since I use the [Tensorflow](https://www.tensorflow.org/versions/r0.10/get_started/index.html) backend for Keras, I performed some memory management which is strictly related to TF. I can't guarantee that the scripts will work on the Theano backend.  
+**WARNING**: since I use the [TensorFlow](https://www.tensorflow.org/versions/r0.10/get_started/index.html) backend for Keras, I performed some memory management which is strictly related to TF. I can't guarantee that the scripts will work on the Theano backend.  
 
 ## Setup
 
@@ -21,6 +21,8 @@ git clone https://gitlab.com/danielegrattarola/hadoop-learning.git
 cd hadoop-learning
 ```  
 to download the source code.  
+
+### Data
   
 The data used to fit the models consists in eight different datasets, each associated to a specific Hive query run on different hardware configurations. The queries are divided into simple (queries R1, R2, R3, R4, and R5) and complex (queries Q2, Q3, and Q4) and of each query was recorded the completion time on different systems.  
   
