@@ -38,13 +38,13 @@ All other necessary folders will be automatically created by the scripts at runt
 
 There are three main scripts that can be used for different purposes:
 - `train_leave_one_out.py` will train the newtork using leave-one-out cross validation and output a file with predictions on all datapoints;
-- `train_custom_cv.py` requires the user to specify a custom column name and some values, and will perform validation on all datapoints matching this simple query (e.g. validate on all rows with 20 and 40 nCores, train on all the other rows);
+- `train_custom.py` requires the user to specify a custom column name and some values, and will perform validation on all datapoints matching this simple query (e.g. validate on all rows with 20 and 40 nCores, train on all the other rows);
 - `predict.py` will load the neural network from file and will predict the output on all the features passed in the input csv.   
 
 It is also possible to set options to customize the training procedure; possible options are displayed by running:
 ```sh
 python train_leave_one_out.py -h 
-python train_custom_cv -h 
+python train_custom -h 
 python predict.py -h 
 ```   
   
@@ -56,11 +56,50 @@ Some of the most imporant options are:
 - **epochs**: how many epochs of training should the model train for (default: 5);
 - **dropout**: custom dropout rate for the neural network (default: 0.1);   
 
-but you should still check out the script-specific options if you intend to use these tools for your research.   
+but you should still check out the script-specific options if you intend to use these tools for your research.  
+**NOTE**: some scripts have mandatory options that must be specified (e.g. the load path for `predict.py`)
+
+### Examples
+One of the most common use cases for the scripts is the one where a model is trained on some data, and then the saved model is used to predict on new data at design time.   
+In this type of scenario, you would want to do something like this:  
+```sh
+# Train on dataset R2 for 4 epochs and save the resulting weights for the model
+python train_leave_one_out.py --dataset R2 --epochs 4 --save
+# Predict on new data (note that the dataset flag now takes the full path to the dataset)
+python predict.py --dataset /path/to/new_data.csv --load output/runYYYMMDD-hhmmss/model.h5
+# Predict on data of which the targets are known (placed in the first column of the csv) and test the performance (**notice the -t flag**)
+python predict.py --dataset /path/to/test_data.csv --load output/runYYYMMDD-hhmmss/model.h5 -t 
+```  
+
+To evaluate the generalization or interpolation capabilities of the model, instead, we could do something like the following:   
+```sh
+# Train on dataset R2 and use all datapoints associated to 20 nCores as validation data
+python train_custom.py --drop nCores 20
+```  
+
 
 ### Output
 
 By running any of the three scripts, a custom `runYYYMMDD-hhmmss` folder will be created in the `output` folder. The folder will contain different CSV files with the data suggested by their filename and some plots of the data.  
+
+#### train_leave_one_out
+- **cross_validation_prediction_DD.csv** contains rows where the first column is the prediction of the model on the corresponding datapoint (i.e. the rest of the row);
+- **cross_validation_metrics_DD.csv** contains the validation loss and accuracy values;
+- **log.txt** contains all the information output by the script during execution;  
+  
+#### train_custon
+- **raw_val_predictions_dd.csv** contains rows where the first column is the prediction of the model on the corresponding datapoint (i.e. the rest of the row), computed for all validation set;
+- **raw_val_metrics_DD.csv** contains the validation loss and accuracy values for the prediction on the validation set;
+- **val_interest_data_DD.csv** contains rows where the model's prediction, the real target value, the nCores feature and the dataSize feature are represented both in the original scale of the data (prefixed by _os_) and the scale used for training the model;
+- **val_computed_error_metrics_DD.csv** contains RMSE, mean absolute error and mean average error for the validation predictions, computed both in the original scale of the data (prefixed by _os_) and the scale used for training the model;
+- **complTime_v_prediction_R1.png** is a plot of the model predictions vs. the real values of the validation set;
+- **log.txt** will contain all the information output by the script during execution; 
+
+#### predict
+- **predictions.csv** contains the model's predictions on the dataset being tested, as well as the scaled datapoint associated to each prediction;
+- **metrics.csv** contains the test loss and accuracy (only if the -t flag was set, i.e. the tested dataset contains the real target values)
+- **log.txt** contains all the information output by the script during execution;  
+
 
 
 

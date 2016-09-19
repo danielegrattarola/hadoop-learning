@@ -10,13 +10,13 @@ from datahelpers import flat2gen
 parser = argparse.ArgumentParser()
 parser.add_argument('-D', '--dataset', type=str, required=True, help='specify the path to the CSV file on which to predict. The csv should have the same feature space on which the loaded model was trained.'
 																	 'It\'s also possible to have a target column in the dataset, but make sure that it\'s the first.')
-parser.add_argument('-t', '--test', action='store_true', help='use the first column of the dataset as target value against which to test the model\'s performance')
 parser.add_argument('-l', '--load', type=str, required=True, help='load the neural network from the given file path')
+parser.add_argument('-t', '--test', action='store_true', help='use the first column of the dataset as target value against which to test the model\'s performance')
 parser.add_argument('-d', '--debug', action='store_true', help='do not print anything to file and do not create the output folder')
 args = parser.parse_args()
 if args.debug:
 	print 'WARNING: debug mode is enabled, output will not be saved.'
-logger = Logger(debug=args.debug)
+logger = Logger(debug=args.debug, append='predicted')
 
 data = pd.read_csv(args.dataset, header=0) # Read dataset from CSV
 scaled_data = pd.DataFrame(sp.scale(data, with_mean=False), columns=data.keys()) # Normalize data

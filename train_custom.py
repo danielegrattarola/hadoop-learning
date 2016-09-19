@@ -38,8 +38,8 @@ logger.log('Dropout probability: %f' % args.dropout)
 logger.log('Dataset: %s' % args.dataset)
 logger.log('Starting training...\n')
 
-metrics_file = 'metrics_%s.csv' % args.dataset
-prediction_file = 'predictions_%s.csv' % args.dataset
+metrics_file = 'raw_val_metrics_%s.csv' % args.dataset
+prediction_file = 'raw_val_predictions_%s.csv' % args.dataset
 
 # Read data
 dataset = pd.read_csv('./data/%s.csv' % args.dataset, header=0) # Read dataset from CSV
@@ -108,7 +108,7 @@ MRE = np.mean(np.true_divide(np.absolute(prediction_data[PREDICTION_FEATURE_NAME
 os_MRE = np.mean(np.true_divide(np.absolute(prediction_data['os_' + PREDICTION_FEATURE_NAME] - prediction_data['os_' + TARGET_FEATURE_NAME]), prediction_data['os_' + TARGET_FEATURE_NAME]))
 
 # Write metrics to file
-error_metrics_file = 'error_metrics_file_%s.csv' % args.dataset
+error_metrics_file = 'val_computed_error_metrics_%s.csv' % args.dataset
 logger.to_csv(error_metrics_file, 'RMSE,os_RMSE,MAE,os_MAE,MRE,os_MRE')
 logger.to_csv(error_metrics_file, [RMSE, os_RMSE, MAE, os_MAE, MRE, os_MRE])
 logger.log('RMSE,MAE,MRE')
@@ -117,10 +117,11 @@ logger.log('os_RMSE,os_MAE,os_MRE')
 logger.log([os_RMSE, os_MAE, os_MRE])
 
 # Write predicted data to file
-prediction_data.to_csv(path_or_buf=logger.path + 'cross_validation_data_%s.csv' % args.dataset, mode='a')
+prediction_data.to_csv(path_or_buf=logger.path + 'val_interest_data_%s.csv' % args.dataset, mode='a')
 
 # Remove run folder if run was not good
 if args.accept is not None and (args.accept < os_MRE or str(raw_input('Keep run? (Y/n) ')) is 'n'):
+	logger.log('#### RUN DISCARDED ####')
 	shutil.rmtree(logger.path)
 	sys.exit(0)
 else:

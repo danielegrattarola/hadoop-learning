@@ -22,7 +22,6 @@ if args.debug:
 logger = Logger(debug=args.debug)
 logger.log('PCA: %s' % args.pca)
 logger.log('Epochs: %d' % args.epochs)
-logger.log('Learning rate: %s' % (args.learning_rate if args.learning_rate is not None else 'default'))
 logger.log('Dropout probability: %f' % args.dropout)
 logger.log('Dataset: %s' % args.dataset)
 logger.log('Starting training...\n')
