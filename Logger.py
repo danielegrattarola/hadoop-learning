@@ -20,41 +20,38 @@ class Logger:
 		self.save_file = self.path + 'model.h5'
 
 	def log(self, data):
-		if self.debug:
-			print data
-			return
-		try:
-			logfile = open(self.path + 'log.txt', 'a')
-		except IOError:
-			print 'Logger:log IO error while opening log file'
-			return
-		if type(data) is dict:
-			for k in data:
-				logfile.write(k + ': ' + str(data[k]) + '\n')
-				print k + ': ' + str(data[k])
-		if type(data) is tuple:
-			logfile.write(data[0] + ': ' + str(data[1]) + '\n')
-		if type(data) is str:
-			logfile.write(data + '\n')
-		if type(data) is list:
-			logfile.write(','.join(str(elem) for elem in data) + '\n')
+		if not self.debug:
+			try:
+				logfile = open(self.path + 'log.txt', 'a')
+			except IOError:
+				print 'Logger:log IO error while opening log file %s' % self.path + 'log.txt'
+				return
+			if type(data) is dict:
+				for k in data:
+					logfile.write(k + ': ' + str(data[k]) + '\n')
+					print k + ': ' + str(data[k])
+			elif type(data) is tuple:
+				logfile.write(data[0] + ': ' + str(data[1]) + '\n')
+			elif type(data) is str:
+				logfile.write(data + '\n')
+			elif type(data) is list:
+				logfile.write(','.join(str(elem) for elem in data) + '\n')
 		print data
 
 	def to_csv(self, filename, row):
-		if self.debug:
-			return
-		try:
-			file = open(self.path + filename, 'a')
-		except IOError:
-			print 'Logger:to_csv IO error while opening file %s' % self.path + filename
-			return
-		if type(row) is list:
-			string = ','.join([str(val) for val in row])
-		elif type(row) is str:
-			string = row
-		else:
-			string = str(row) # Try to convert it anyway
-		string = string + '\n' if not string.endswith('\n') else ''
-		file.write(string)
-		file.close()
+		if not self.debug:
+			try:
+				file = open(self.path + filename, 'a')
+			except IOError:
+				print 'Logger:to_csv IO error while opening file %s' % self.path + filename
+				return
+			if type(row) is list:
+				string = ','.join([str(val) for val in row])
+			elif type(row) is str:
+				string = row
+			else:
+				string = str(row) # Try to convert it anyway
+			string = string + '\n' if not string.endswith('\n') else ''
+			file.write(string)
+			file.close()
 
