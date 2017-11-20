@@ -6,7 +6,7 @@ The Apache Hadoop framework is an open-source software framework for distributed
 Apache Hive is a data warehouse infrastructure built on top of Hadoop for providing data summarization, query, and analysis. Hive gives an SQL-like interface to query data stored in various databases and file systems that integrate with Hadoop.  
 Due to the possibly great complexity of the distributed systems on which Hive queries are run, and enormous sizes of modern datawarehouses, it is often of interest to have insights on the performances obtained on specific types of queries.  
   
-You can find a detailed recount of my experiments with these scripts and dataset [here](http://exsubstantia.com/ai/Estimating%20performance%20of%20Hadoop%20systems%20with%20deep%20learning.pdf.zip).
+You can find a detailed recount of my experiments with these scripts and dataset [on my blog](https://danielegrattarola.github.io/about/).
 
 ## Dependencies
 The dependencies for the scripts include: [Keras](http://keras.io/#installation), [scikit-learn](http://scikit-learn.org/stable/install.html), [Pandas](http://pandas.pydata.org/), [h5py](http://packages.ubuntu.com/trusty/python-h5py), [Numpy](https://www.scipy.org/scipylib/download.html) and [Matplotlib](http://matplotlib.org/users/installing.html) (these last two are also dependecies of Keras).   
